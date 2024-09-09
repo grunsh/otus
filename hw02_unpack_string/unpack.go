@@ -8,15 +8,22 @@ import (
 
 var ErrInvalidString = errors.New("invalid string")
 
+func isLatter(s rune) bool {
+	return (s >= 'a' && s <= 'z') || (s >= 'A' && s <= 'Z')
+}
+
+func isDigit(s rune) bool {
+	return s >= '0' && s <= '9'
+}
+
 func Unpack(st string) (string, error) {
 	var s strings.Builder
-	var ErrInvalidString error = errors.New("invalid string")
 	i := 0
 	for i < len(st) {
 		// Если буква, то ...
-		if (st[i] >= 'a' && st[i] <= 'z') || (st[i] >= 'A' && st[i] <= 'Z') {
+		if isLatter(rune(st[i])) {
 			if len(st) > i+1 { // Надо загялнуть на символ дальше, потому проверим, не выйдем ли за пределы строки
-				if st[i+1] >= '0' && st[i+1] <= '9' { // Если следом за буквой цифра, то пишем повторы в строку
+				if isDigit(rune(st[i+1])) { // Если следом за буквой цифра, то пишем повторы в строку
 					if r, err := strconv.Atoi(st[i+1 : i+2]); err == nil {
 						s.WriteString(strings.Repeat(st[i:i+1], r))
 						i += 2
@@ -33,7 +40,7 @@ func Unpack(st string) (string, error) {
 			if len(st) > i+1 {
 				if st[i+1] == 'n' { // У нас тут перевод строки
 					if len(st) > i+2 {
-						if st[i+2] >= '0' && st[i+2] <= '9' { // Перевод строки надо повторить st[i+2] раз, ибо следом цифра
+						if isDigit(rune(st[i+2])) { // Перевод строки надо повторить st[i+2] раз, ибо следом цифра
 							if r, err := strconv.Atoi(st[i+2 : i+3]); err == nil {
 								s.WriteString(strings.Repeat(st[i:i+2], r))
 								i += 3 // У нас тут \n и цифра, двигаем указатель сразу на 3
@@ -54,5 +61,5 @@ func Unpack(st string) (string, error) {
 			return "", ErrInvalidString
 		}
 	}
-	return "", nil
+	return s.String(), nil
 }
