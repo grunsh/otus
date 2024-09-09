@@ -10,6 +10,7 @@ var ErrInvalidString = errors.New("invalid string")
 
 func Unpack(st string) (string, error) {
 	var s strings.Builder
+	var ErrInvalidString error = errors.New("invalid string")
 	i := 0
 	for i < len(st) {
 		// Если буква, то ...
@@ -46,11 +47,11 @@ func Unpack(st string) (string, error) {
 						i += 2
 					}
 				} else {
-					return "", errors.New("Слэш, за которым нет n. Такое мы не поддерживаем.")
+					return "", ErrInvalidString
 				}
 			}
 		} else {
-			return "", errors.New("Не корректная строка")
+			return "", ErrInvalidString
 		}
 	}
 	return s.String(), nil
