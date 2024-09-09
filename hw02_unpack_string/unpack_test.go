@@ -3,7 +3,7 @@ package hw02_unpack_string
 import (
 	"errors"
 	"testing"
-
+	//nolint
 	"github.com/stretchr/testify/require"
 )
 
