@@ -2,8 +2,11 @@ package hw02_unpack_string
 
 import (
 	"errors"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestUnpack(t *testing.T) {

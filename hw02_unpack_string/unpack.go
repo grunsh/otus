@@ -1,4 +1,4 @@
-// nolint
+//nolint
 package hw02_unpack_string
 
 import (
