@@ -18,49 +18,48 @@ func isDigit(s rune) bool {
 
 func Unpack(st string) (string, error) {
 	var s strings.Builder
+	var ErrInvalidString error = errors.New("invalid string")
+	var tempStr string
+	var incr int
+	var repeat int // сколько раз писать литерал
+	var err error
 	i := 0
 	for i < len(st) {
-		// Если буква, то ...
+		incr = 0
+		// Вделяем литерал, который повторять 0..9 раз
 		if isLatter(rune(st[i])) {
-			if len(st) > i+1 { // Надо загялнуть на символ дальше, потому проверим, не выйдем ли за пределы строки
-				if isDigit(rune(st[i+1])) { // Если следом за буквой цифра, то пишем повторы в строку
-					if r, err := strconv.Atoi(st[i+1 : i+2]); err == nil {
-						s.WriteString(strings.Repeat(st[i:i+1], r))
-						i += 2
-					}
-				} else { // Текущая буква и следом НЕ цыфра, росто добавляем букву результирующую строку.
-					s.WriteString(st[i : i+1])
-					i++
-				}
-			} else { // Строка за текущей буквой заканчивается. Цифры точно нет, повторять нечего, пишем в результат.
-				s.WriteString(st[i : i+1])
-				i++
-			}
+			tempStr = st[i : i+1]
+			incr = 1
 		} else if st[i] == '\\' { // Встретили слэш. Анализируем строку вперёд
 			if len(st) > i+1 {
 				if st[i+1] == 'n' { // У нас тут перевод строки
-					if len(st) > i+2 {
-						if isDigit(rune(st[i+2])) { // Перевод строки надо повторить st[i+2] раз, ибо следом цифра
-							if r, err := strconv.Atoi(st[i+2 : i+3]); err == nil {
-								s.WriteString(strings.Repeat(st[i:i+2], r))
-								i += 3 // У нас тут \n и цифра, двигаем указатель сразу на 3
-							}
-						} else { // Нет цыфры за \n, поэтому просто пишем один \n и двигаем указатель на 2
-							s.WriteString(st[i : i+2])
-							i += 2
-						}
-					} else { // На \n строка заканчивается. Пишем его в итог и двигаем указатель на 2
-						s.WriteString(st[i : i+2])
-						i += 2
-					}
-				} else {
+					tempStr = st[i : i+2]
+					incr = 2
+				} else { // после сэша не n, ошибка
 					return "", ErrInvalidString
 				}
+			} else { // Слэш за которым строка кончается. Ошибка.
+				return "", ErrInvalidString
 			}
-		} else {
+		} else { // Не буква и не слэш, ошибка
 			return "", ErrInvalidString
 		}
-
+		// Анализируем строку дальше, есть ли цифра, какая она или строка кончилась
+		repeat = 1            // Если цифры далее нет, то 1, если есть переопределится в цифру
+		if len(st) > i+incr { // Проверим на конец строки, чтобы заглянуть, а не цифра ли дальше?
+			if isDigit(rune(st[i+incr])) { // Не цифра ли следом?
+				repeat, err = strconv.Atoi(st[i+incr : i+incr+1])
+				if err != nil { // Цифра. Конвретим в r
+					panic(err)
+				}
+				i += 1
+			} else { // Следом не цифра, пишем 1 раз
+				repeat = 1
+			}
+		}
+		// Записываем в итоговую строку литерал tempStr repeat раз
+		s.WriteString(strings.Repeat(tempStr, repeat))
+		i += incr
 	}
 	return s.String(), nil
 }
