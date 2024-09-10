@@ -1,4 +1,4 @@
-package hw02_unpack_string
+package hw02UnpackString
 
 import (
 	"errors"
@@ -60,6 +60,7 @@ func Unpack(st string) (string, error) {
 		} else {
 			return "", ErrInvalidString
 		}
+
 	}
 	return s.String(), nil
 }
