@@ -47,17 +47,15 @@ func Unpack(st string) (string, error) {
 		if len(st) > i+incr { // Проверим на конец строки, чтобы заглянуть, а не цифра ли дальше?
 			if isDigit(rune(st[i+incr])) { // Не цифра ли следом?
 				repeat, err = strconv.Atoi(st[i+incr : i+incr+1])
-				if err != nil { // Цифра. Конвретим в r
+				if err != nil {
 					panic(err)
 				}
-				i++
-			} else { // Следом не цифра, пишем 1 раз
-				repeat = 1
+				i++ // Учитывая, что получили цифру, надо на 1 сдвинуть указатель
 			}
 		}
 		// Записываем в итоговую строку литерал tempStr repeat раз
 		s.WriteString(strings.Repeat(tempStr, repeat))
-		i += incr
+		i += incr // Указатель сдвинем на 1, если буква, на 2 если \n
 	}
 	return s.String(), nil
 }
