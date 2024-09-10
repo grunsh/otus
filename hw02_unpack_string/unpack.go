@@ -1,4 +1,3 @@
-// nolint
 package hw02unpackstring
 
 import (
