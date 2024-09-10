@@ -1,4 +1,5 @@
-package hw02UnpackString
+// nolint
+package hw02unpackstring
 
 import (
 	"errors"
