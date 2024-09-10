@@ -18,16 +18,14 @@ func isDigit(s rune) bool {
 
 func Unpack(st string) (string, error) {
 	var s strings.Builder
-	var ErrInvalidString error = errors.New("invalid string")
 	var tempStr string
 	var incr int
 	var repeat int // сколько раз писать литерал
 	var err error
 	i := 0
 	for i < len(st) {
-		incr = 0
 		// Вделяем литерал, который повторять 0..9 раз
-		if isLatter(rune(st[i])) {
+		if isLatter(rune(st[i])) { //nolint:gocritic,nestif
 			tempStr = st[i : i+1]
 			incr = 1
 		} else if st[i] == '\\' { // Встретили слэш. Анализируем строку вперёд
@@ -52,7 +50,7 @@ func Unpack(st string) (string, error) {
 				if err != nil { // Цифра. Конвретим в r
 					panic(err)
 				}
-				i += 1
+				i++
 			} else { // Следом не цифра, пишем 1 раз
 				repeat = 1
 			}
