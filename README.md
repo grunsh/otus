@@ -27,6 +27,3 @@ golangci-lint has version 1.57.2 built with go1.22.1 from 77a8601a on 2024-03-28
 ```
 
 ---
-Авторы ДЗ:
-- [Дмитрий Смаль](https://github.com/mialinx)
-- [Антон Телышев](https://github.com/Antonboom)
